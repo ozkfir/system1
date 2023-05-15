@@ -1,9 +1,4 @@
-/**
- * Demo program for ADT exercise.
- * 
- * Author: Evgeny Hershkovitch Neiterman
- * Since : 2023-02
- */
+
 
 #include "AdptArray.h"
 #include "book.h"
@@ -14,35 +9,107 @@
 #include <assert.h>
 
 int main() {
+    printf("----------------------------------------------------------------------\n");
 
-	pbook b1 = creat_book("harry Potter",12345) ;
-	pbook b2= creat_book("C intro", 45678) ;
-	PAdptArray mybooks = CreateAdptArray(copy_book,delete_book,print_book);
-	SetAdptArrayAt(mybooks,3,b1);
-	SetAdptArrayAt(mybooks,5,b2);
-	printf("the size is %d\n",GetAdptArraySize(mybooks));  //should print 6
-	pbook b = GetAdptArrayAt(mybooks,4); // should return null;
-	assert(b==NULL); // doesn't fail
-	b = GetAdptArrayAt(mybooks,3);
-	printf("the book is %s\n",b->name); //should print "Harry Potter"
-	PrintDB(mybooks);
+    printf("Stormlight:\n");
+    pbook book1 = creat_book("book1",2001);
+    pbook book2=  creat_book("book2",2002);
+    pbook book3 = creat_book("book3",2003);
+    PAdptArray Stormlight = CreateAdptArray(copy_book,delete_book,print_book);
 
-	pperson p1 = creat_person("Harry","Potter", 934);
-	pperson p2 = creat_person("Ron","Weasley", 789);
-	PAdptArray HP_caracters = CreateAdptArray(copy_person,delete_person,print_person);
-	SetAdptArrayAt(HP_caracters,2,p1);
-	SetAdptArrayAt(HP_caracters,8,p2);
-	printf("the size is %d\n",GetAdptArraySize(HP_caracters)); // prints 9
-	PrintDB(HP_caracters); // prints:
-	//first name: Harry last name: Potter id: 934
-        //first name: Ron last name: Weasley id: 789
-	
-	DeleteAdptArray(mybooks);
-	DeleteAdptArray(HP_caracters);
-	delete_book(b1);
-	delete_book(b2);
-	delete_book(b);
-	delete_person(p1);
-	delete_person(p2);
+    SetAdptArrayAt(Stormlight,0,book1);
+    SetAdptArrayAt(Stormlight,1,book2);
+    SetAdptArrayAt(Stormlight,2,book3);
+    printf("Stormlight size is %d\n\n",GetAdptArraySize(Stormlight)); // print 3
+
+
+    printf("print the Stormlight-\n");
+    PrintDB(Stormlight);
+
+    SetAdptArrayAt(Stormlight,0,book3);//You can replace a new object with an old one without memory leaks
+    SetAdptArrayAt(Stormlight,1,book3);
+    printf("\n\n");
+
+    printf("print the Stormlight\n");
+    PrintDB(Stormlight);
+
+    pbook book4= GetAdptArrayAt(Stormlight,0);//Gets a copy so if we delete the Stormlight and Other books it won't be deleted
+    delete_book(book1);
+    delete_book(book2);
+    delete_book(book3);
+    DeleteAdptArray(Stormlight);
+
+    printf("\nStormlight and Other books deleted\n");
+    printf("book4\n");
+    print_book(book4);
+
+    printf("----------------------------------------------------------------------\n");
+
+    printf("\nTSA_caracters1:\n\n");
+    PAdptArray TSA_caracters1 = CreateAdptArray(copy_person,delete_person,print_person);
+
+    pperson Character1 = creat_person("Kaladin","Stormblessed", 100);
+    pperson Character2 = creat_person("Shallan","Davar", 101);
+    pperson Character3 = creat_person("Dalinar","Kholin", 102);
+
+    printf("the size is %d  (TSA_caracters empty)\n",GetAdptArraySize( TSA_caracters1));//should print 0(TSA_caracters empty)
+
+
+    SetAdptArrayAt(TSA_caracters1,0,Character1);
+    printf("the size is %d  ( object in 0th)\n",GetAdptArraySize( TSA_caracters1));  //should print 1 The (In TSA_caracters there is an object in the 0th place)
+
+
+    SetAdptArrayAt(TSA_caracters1,19,Character2);
+    printf("the size is %d  ( object in 19th)\n",GetAdptArraySize( TSA_caracters1));  //should print 20 (In TSA_caracters there is an object in the 19th place)
+
+    printf("\nprint TSA_caracters1\n");
+    PrintDB(TSA_caracters1);
+    printf("\n\n");
+    DeleteAdptArray(TSA_caracters1);//TSA_caracters1 deleted but the caracters are not
+    printf("TSA_caracters deleted but the caracters are not\n");
+
+
+    printf("print caracterss\n");
+    print_person(Character1);
+    print_person(Character2);
+
+
+
+
+
+
+    printf("----------------------------------------------------------------------\n");
+    printf("\nTSA_caracters2:\n");
+    PAdptArray TSA_caracters2=CreateAdptArray(copy_person,delete_person,print_person);
+    SetAdptArrayAt(TSA_caracters2,9,Character1);
+    SetAdptArrayAt(TSA_caracters2,5,Character3);
+    SetAdptArrayAt(TSA_caracters2,3,Character3);
+    SetAdptArrayAt(TSA_caracters2,10,Character3);//You can enter the same object several times
+
+
+    delete_person(Character1);
+    delete_person(Character2);
+    delete_person(Character3);//caracters deleted but the TSA_caracters2 are not
+
+    printf("\npcaracters deleted but the TSA_caracters2 are not");
+    printf("\nprint TSA_caracters2\n");
+	PrintDB(TSA_caracters2);//Prints by index and not by insertion order
+
+
+    printf("\nprint TSA_caracters2 with index\n");
+    for (int i = 0; i <GetAdptArraySize(TSA_caracters2) ; ++i) {//print in the same order with index
+        if(GetAdptArrayAt(TSA_caracters2,i)!=NULL){
+        printf("%d-",i);
+        print_person(GetAdptArrayAt(TSA_caracters2,i));}
+    }
+    printf("----------------------------------------------------------------------\n");
+
+
+    DeleteAdptArray(TSA_caracters2);
 	return 0;
 }
+
+
+
+
+

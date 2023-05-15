@@ -1,32 +1,20 @@
-#include "Person.h"
-#include "book.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "AdptArray.h"
 
-
-typedef struct AdptArray_{
-    int size;
-    DEL_FUNC f_del;
-    COPY_FUNC f_copy;
-    PRINT_FUNC f_print;
-    PElement * arr;
-    int live;
-}AdptArray;
-
-
-int bigerr_arr(PAdptArray adpt,int i)
+int increase_arr(PAdptArray adpt,int i)
 {
     adpt->arr=(PElement*)realloc(adpt->arr,(i+1)* sizeof(PElement));
     if (adpt->arr == NULL){
         printf("problem with memory");
-        return 0;
+        return FAIL;
     }
     for (int j = adpt->size; j <=i ; j++) {
         adpt->arr[j]=NULL;
     }
     adpt->size=i+1;
-    return 1;
+    return SUCCESS;
 }
 
 
@@ -51,6 +39,8 @@ PAdptArray CreateAdptArray(COPY_FUNC copyFunc, DEL_FUNC delFunc,PRINT_FUNC print
     adpt->f_print=printFunc;
     return adpt;
 }
+
+
 void DeleteAdptArray(PAdptArray adpt){
     if(adpt!=NULL) {
         if (adpt->arr != NULL) {
@@ -63,9 +53,11 @@ void DeleteAdptArray(PAdptArray adpt){
     free(adpt);
     }
 }
+
+
 Result SetAdptArrayAt(PAdptArray adpt, int i, PElement pElement){////how can fail
     if(adpt->size<=i)
-        if(!bigerr_arr(adpt,i))
+        if(!increase_arr(adpt,i))
             return FAIL;
     if((adpt->arr[i])!=NULL)
         free(adpt->arr[i]);
